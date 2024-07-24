@@ -6,4 +6,17 @@ resources:
   - repository.yaml
   - release.yaml
   - secret.yaml
-  - sops.yaml
+patches:
+  - patch: |
+        apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+        kind: Kustomization
+        metadata:
+          name: all
+        spec: 
+          decryption:
+            provider: sops
+            secretRef:
+              name: sops-age
+    target:
+      kind: Kustomization
+      labelSelector: app.kubernetes.io/sops=enabled
